@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -40,8 +41,11 @@ android {
     }
 }
 
-dependencies {
 
+
+dependencies {
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,18 +68,27 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.7.6")
-    implementation("com.google.dagger:hilt-android:2.44")
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+//    implementation("com.google.dagger:hilt-android:2.44")
+//
+//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+//    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+//    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+//
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+//
+//    implementation("com.jakewharton.timber:timber:5.0.1")
+//
+//    implementation("com.google.firebase:firebase-auth-ktx")
+//    implementation("com.google.firebase:firebase-firestore-ktx")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+// Allow references to generated code
 
-    implementation("com.jakewharton.timber:timber:5.0.1")
-
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+}
 
 
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

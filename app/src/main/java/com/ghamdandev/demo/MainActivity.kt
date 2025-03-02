@@ -130,8 +130,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.ghamdandev.demo.ui.theme.ClickCounterAppTheme
-
+import javax.inject.Inject
+import javax.inject.Named
+import android.util.Log
 class MainActivity : ComponentActivity() {
+    @Inject
+    @Named("firstName")
+    lateinit var name1: String
+    val TAG = "MainActivityDaggerHilt"
+
+//    val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

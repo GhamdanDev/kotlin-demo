@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727498637083",
+    "project_id": "app-demo-9ee28",
+    "storage_bucket": "app-demo-9ee28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727498637083:android:921801c101af3a8e8c9dbe",
+        "android_client_info": {
+          "package_name": "com.ghamdandev.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8eBjtHW3pH7V2Vn5kV72wnvS6cx2iQi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

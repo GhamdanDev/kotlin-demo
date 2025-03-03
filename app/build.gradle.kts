@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -45,6 +46,8 @@ android {
 
 dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -68,7 +71,20 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3") // OkHttp
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+//    implementation ("com.google.accompanist:accompanist-flowlayout:0.32.0")
+//    // or for newer versions with Material 3
+//    implementation ("dev.chrisbanes.compose:compose-table:0.4.0")
+}
+//    implementation ("com.github.Tlaster.ComposeDataTables:datatables:0.1.0")
+//        implementation("com.seanproctor:data-table-material3:0.11.3")
 //    implementation("com.google.dagger:hilt-android:2.44")
 //
 //    implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -84,7 +100,7 @@ dependencies {
 
 // Allow references to generated code
 
-}
+
 
 
 

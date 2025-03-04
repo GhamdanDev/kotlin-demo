@@ -3,7 +3,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
-import com.ghamdandev.demo.ui.screens.posts.PostViewModel
+//import com.ghamdandev.demo.ui.screens.posts.PostViewModel
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,10 +29,10 @@ import com.google.type.DateTime
 
 @Composable
 fun CreatePostScreen(
-    viewModel: PostViewModel = hiltViewModel(), // استخدام Hilt لحقن ViewModel
+//    viewModel: PostViewModel = hiltViewModel(), // استخدام Hilt لحقن ViewModel
     onPostCreated: () -> Unit
 ) {
-      val firebaseService = FirebaseService()
+//      val firebaseService = FirebaseService()
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf("") }
 var post  =Post(0,1,title,body)

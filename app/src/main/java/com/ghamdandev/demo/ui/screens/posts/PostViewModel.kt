@@ -1,80 +1,110 @@
+
 package com.ghamdandev.demo.ui.screens.posts
 
-import FirebaseService
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.ghamdandev.demo.data.api.model.Post
+import com.ghamdandev.demo.data.model.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-
-class PostViewModel : ViewModel() {
-    private val firebaseService = FirebaseService()
+@HiltViewModel
+class PostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
-    val posts: StateFlow<List<Post>> = _posts.asStateFlow()
+    val posts: StateFlow<List<Post>> = _posts
 
+    // حالة التحميل
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    val isLoading: StateFlow<Boolean> = _isLoading
 
+    // حالة الخطأ
     private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
+    val error: StateFlow<String?> = _error
 
-    init {
-        loadPosts()
-    }
+    // حالة لمعرفة ما إذا كانت العملية ناجحة أم لا
+    private val _operationStatus = MutableStateFlow<Boolean?>(null)
+    val operationStatus: StateFlow<Boolean?> = _operationStatus
 
-    private fun loadPosts() {
+    // جلب جميع المنشورات
+    fun fetchPosts() {
         viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
             try {
-                _isLoading.value = true
-                _posts.value = firebaseService.getPosts()
-                _error.value = null
+                _posts.value = repository.getPosts()
             } catch (e: Exception) {
-                _error.value = e.message
+                _error.value = e.message ?: "Failed to fetch posts"
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    fun createPost(title: String, body: String, userId: Int) {
+    fun addPost(post: Post) {
         viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
             try {
-                _isLoading.value = true
-                val newPost = Post(id = 0, userId = userId, title = title, body = body)
-                val createdPost = firebaseService.createPost(newPost)
-                if (createdPost != null) {
-                    _posts.value = _posts.value + createdPost
+                val isSuccess = repository.addPost(post)
+                _operationStatus.value = isSuccess
+                if (isSuccess) {
+                    fetchPosts()
                 }
-                _error.value = null
             } catch (e: Exception) {
-                _error.value = e.message
+                _error.value = e.message ?: "Failed to add post"
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    fun updatePost(updatedPost: Post) {
+    fun updatePost(post: Post) {
         viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
             try {
-                _isLoading.value = true
-                val success = firebaseService.updatePost(updatedPost)
-                if (success) {
-                    _posts.value = _posts.value.map { if (it.id == updatedPost.id) updatedPost else it }
+                val isSuccess = repository.updatePost(post)
+                _operationStatus.value = isSuccess
+                if (isSuccess) {
+                    fetchPosts()
                 }
-                _error.value = null
             } catch (e: Exception) {
-                _error.value = e.message
+                _error.value = e.message ?: "Failed to update post"
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
+    fun deletePost(postId: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val isSuccess = repository.deletePost(postId)
+                _operationStatus.value = isSuccess
+                if (isSuccess) {
+                    fetchPosts()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to delete post"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+
+    fun clearError() {
+        _error.value = null
+    }
+
+    fun clearOperationStatus() {
+        _operationStatus.value = null
+    }
 }

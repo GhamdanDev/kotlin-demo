@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -78,7 +79,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
+    implementation("com.jakewharton.timber:timber:5.0.1")
 //    implementation ("com.google.accompanist:accompanist-flowlayout:0.32.0")
 //    // or for newer versions with Material 3
 //    implementation ("dev.chrisbanes.compose:compose-table:0.4.0")

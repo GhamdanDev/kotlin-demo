@@ -20,17 +20,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import com.ghamdandev.demo.data.api.model.Post
+import com.google.type.DateTime
+
 @Composable
 fun CreatePostScreen(
-    viewModel: PostViewModel = viewModel(),
+    viewModel: PostViewModel = hiltViewModel(), // استخدام Hilt لحقن ViewModel
     onPostCreated: () -> Unit
 ) {
+      val firebaseService = FirebaseService()
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf("") }
-    val userId = 1 // يمكنك تغيير هذا ليكون ديناميكيًا إذا لزم الأمر
+var post  =Post(0,1,title,body)
+
 
     Column(
         modifier = Modifier
@@ -53,10 +59,13 @@ fun CreatePostScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            viewModel.createPost(title, body, userId)
-            onPostCreated()
-        }) {
+        Button(
+            onClick = {
+//                viewModel.createPost(post) // استدعاء الوظيفة داخل ViewModel
+//                onPostCreated()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Create Post")
         }
     }

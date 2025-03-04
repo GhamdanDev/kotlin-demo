@@ -1,7 +1,3 @@
-package com.ghamdandev.demo.data.api
-
-
-
 import android.util.Log
 import com.ghamdandev.demo.data.api.model.Post
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +26,14 @@ class FirebaseService {
         } catch (e: Exception) {
             Log.e("FirebaseService", "Error creating post", e)
             null
+        }
+    }
+    suspend fun updatePost(post: Post): Boolean {
+        return try {
+            postsCollection.document(post.id.toString()).set(post).await()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 }

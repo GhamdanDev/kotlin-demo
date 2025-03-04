@@ -3,7 +3,7 @@ package com.ghamdandev.demo.ui.theme.ui.navigation
 import ClickCounterScreen
 import CreatePostScreen
 //import CreatePostScreen
-import  PostsScreen
+//import  PostsScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-import com.ghamdandev.demo.SettingsScreen
+
 import com.ghamdandev.demo.ui.components.BottomNavigationBar
 
 
@@ -28,8 +28,8 @@ fun AppNavigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") { ClickCounterScreen() }
-            composable("posts") { PostsScreen() }  // Changed from UsersScreen
-            composable("settings") { SettingsScreen() }
+//            composable("posts") { PostsScreen() }  // Changed from UsersScreen
+//            composable("settings") { SettingsScreen() }
             composable("createPost") { CreatePostScreen(onPostCreated = { navController.navigate("posts") }) }
         }
     }

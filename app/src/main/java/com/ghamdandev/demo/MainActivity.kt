@@ -112,96 +112,130 @@
 
 package com.ghamdandev.demo
 
+//import PostScreen
 import PostsScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
-import com.ghamdandev.demo.ui.theme.ClickCounterAppTheme
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.material3.Text
-import com.ghamdandev.demo.data.api.ApiClient
+
+import android.util.Log
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ghamdandev.demo.data.api.model.Post
-import com.ghamdandev.demo.ui.theme.ui.navigation.AppNavigation
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.ghamdandev.demo.ui.screens.posts.PostViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            ClickCounterAppTheme {
-                AppNavigation()
-            }
+            val viewModel: PostViewModel = viewModel()
+            PostsScreen(viewModel)
         }
     }
 }
+
+@Composable
+fun DisplayData(viewModel: PostViewModel) {
+    val posts by viewModel.posts.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchPosts()
+    }
+
+    if (posts.isEmpty()) {
+        Text(text = "Loading data...")
+    } else {
+        LazyColumn {
+            itemsIndexed(posts) { index, post ->
+                PostItem(post = post)
+            }
+
+        }
+    }
+}
+
+@Composable
+fun PostItem(post: Post) {
+    Column() {
+        Text(text = "ID: ${post.id}")
+        Text(text = "User ID: ${post.userId}")
+        Text(text = "Title: ${post.title}")
+        Text(text = "Body: ${post.body}")
+    }
+}
+
+
+//import com.ghamdandev.demo.ui.screens.posts.PostViewModel
+//
+//import dagger.hilt.android.AndroidEntryPoint
+//
+//@AndroidEntryPoint
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            ClickCounterAppTheme {
+//                val viewModel: PostViewModel = hiltViewModel()
+//                PostsScreen(viewModel)
+//            }
+//        }
+//    }
+//}
+//
+//class MainActivity : ComponentActivity() {
+//
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            ClickCounterAppTheme {
+//                PostsScreen()
+////                AppNavigation()
+//            }
+//        }
+//    }
+//}
 
 
 
 // 👇 شاشة عداد النقرات
 
 // 👇 شاشة الإعدادات
-@Composable
-fun SettingsScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "🚀 إعدادات التطبيق", fontSize = 24.sp)
-    }
-}
+//@Composable
+//fun SettingsScreen() {
+//    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//        Text(text = "🚀 إعدادات التطبيق", fontSize = 24.sp)
+//    }
+//}
 
-
-@Composable
-fun UsersScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "users", fontSize = 24.sp)
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewApp() {
-    ClickCounterAppTheme {
-      // AppNavigation()
-        PostsScreen()
-    }
-}
-
-
+//
+//@Composable
+//fun UsersScreen() {
+//    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//        Text(text = "users", fontSize = 24.sp)
+//
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewApp() {
+//    ClickCounterAppTheme {
+//      // AppNavigation()
+//        PostsScreen()
+//    }
+//}
+//
+//
 

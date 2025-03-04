@@ -161,13 +161,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
-    val db = Firebase.firestore
-    // Create a new user with a first and last name
-    val user = hashMapOf(
-        "first" to "Ada",
-        "last" to "Lovelace",
-        "born" to 1815
-    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -205,7 +198,8 @@ fun UsersScreen() {
 @Composable
 fun PreviewApp() {
     ClickCounterAppTheme {
-        AppNavigation()
+      // AppNavigation()
+        PostsScreen()
     }
 }
 

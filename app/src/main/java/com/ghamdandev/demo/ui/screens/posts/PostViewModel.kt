@@ -18,19 +18,15 @@ class PostViewModel @Inject constructor(private val repository: PostRepository) 
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> = _posts
 
-    // حالة التحميل
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // حالة الخطأ
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    // حالة لمعرفة ما إذا كانت العملية ناجحة أم لا
     private val _operationStatus = MutableStateFlow<Boolean?>(null)
     val operationStatus: StateFlow<Boolean?> = _operationStatus
 
-    // جلب جميع المنشورات
     fun fetchPosts() {
         viewModelScope.launch {
             _isLoading.value = true

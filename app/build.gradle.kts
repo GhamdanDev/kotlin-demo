@@ -50,6 +50,10 @@ dependencies {
 //    kapt("com.google.dagger:hilt-android-compiler:2.56.1")
 
     implementation("com.google.dagger:hilt-android:2.50")
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation(libs.firebase.firestore)

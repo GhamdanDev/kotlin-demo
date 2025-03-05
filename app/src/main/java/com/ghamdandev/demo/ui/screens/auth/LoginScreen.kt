@@ -17,6 +17,7 @@ fun LoginScreen(
 
     var usernameError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
+    var loginError by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -36,7 +37,8 @@ fun LoginScreen(
             value = username,
             onValueChange = {
                 username = it
-                usernameError = null  // إعادة تعيين الخطأ عند التغيير
+                usernameError = null
+                loginError = null
             },
             label = { Text("User Name") },
             modifier = Modifier.fillMaxWidth(),
@@ -56,7 +58,8 @@ fun LoginScreen(
             value = password,
             onValueChange = {
                 password = it
-                passwordError = null  // إعادة تعيين الخطأ عند التغيير
+                passwordError = null
+                loginError = null
             },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
@@ -71,7 +74,16 @@ fun LoginScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (loginError != null) {
+            Text(
+                text = loginError!!,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         Button(
             onClick = {
@@ -80,21 +92,20 @@ fun LoginScreen(
                 if (username.isBlank()) {
                     usernameError = "User Name cannot be empty"
                     isValid = false
-                } else if (username.length < 3) {
-                    usernameError = "User Name must be at least 3 characters"
-                    isValid = false
                 }
 
                 if (password.isBlank()) {
                     passwordError = "Password cannot be empty"
                     isValid = false
-                } else if (password.length < 6) {
-                    passwordError = "Password must be at least 6 characters"
-                    isValid = false
                 }
 
                 if (isValid) {
-                    onLoginSuccess()
+                    // ✅   
+                    if (username == "ali" && password == "1234") {
+                        onLoginSuccess()
+                    } else {
+                        loginError = "Invalid username or password"
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()

@@ -70,8 +70,20 @@ class PostRepository @Inject constructor(private val firestore: FirebaseFirestor
     }
     suspend fun deletePost(postId: Long): Boolean {
         return try {
-            firestore.collection("posts").document(postId.toString()).delete().await()
-            true
+
+            val query = firestore.collection("posts")
+                .whereEqualTo("id", postId)
+                .get()
+                .await()
+
+            if (query.documents.isNotEmpty()) {
+
+                val documentId = query.documents[0].id
+                firestore.collection("posts").document(documentId).delete().await()
+
+
+            }
+                true
         } catch (e: Exception) {
             false
         }

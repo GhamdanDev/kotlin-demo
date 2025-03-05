@@ -1,7 +1,7 @@
 package com.ghamdandev.demo.ui.theme.ui.navigation
 
 import ClickCounterScreen
-import CreatePostScreen
+
 //import CreatePostScreen
 //import  PostsScreen
 import androidx.compose.foundation.layout.padding
@@ -30,7 +30,6 @@ fun AppNavigation() {
             composable("home") { ClickCounterScreen() }
 //            composable("posts") { PostsScreen() }  // Changed from UsersScreen
 //            composable("settings") { SettingsScreen() }
-            composable("createPost") { CreatePostScreen(onPostCreated = { navController.navigate("posts") }) }
         }
     }
 }

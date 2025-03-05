@@ -1,9 +1,10 @@
 package com.ghamdandev.demo.data.api.model
 
 
+
 data class Post(
-    val id: Int,
-    val userId: Int,
-    val title: String,
-    val body: String
+    val id: Long,    
+    val userId: Long,   
+    val title: String, 
+    val body: String  
 )

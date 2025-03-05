@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 
 import androidx.compose.material.icons.filled.Check
@@ -39,444 +40,163 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 
-
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ghamdandev.demo.ui.screens.posts.PostViewModel
-//
-//@Composable
-//fun PostsScreen(viewModel: PostViewModel = viewModel()) {
-//    val posts by viewModel.posts.collectAsState()
-//    val operationStatus by viewModel.operationStatus.collectAsState()
-//
-//    Scaffold { paddingValues ->
-//        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-//            if (posts.isEmpty()) {
-//                Text("No posts available", modifier = Modifier.align(Alignment.Center))
-//            } else {
-//                PostTable(
-//                    posts = posts,
-//                    onPostUpdated = { updatedPost -> viewModel.updatePost(updatedPost) },
-//                    onPostDeleted = { postId -> viewModel.deletePost(postId) }
-//                )
-//            }
-//
-//            // عرض حالة العملية (نجاح/فشل)
-//            operationStatus?.let { status ->
-//                Text(
-//                    if (status) "Operation Successful" else "Operation Failed",
-//                    modifier = Modifier
-//                        .align(Alignment.BottomCenter)
-//                        .padding(16.dp)
-//                        .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
-//                        .padding(8.dp)
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun PostTable(
-//    posts: List<Post>,
-//    onPostUpdated: (Post) -> Unit,
-//    onPostDeleted: (Long) -> Unit
-//) {
-//    var searchQuery by remember { mutableStateOf("") }
-//    var sortColumn by remember { mutableStateOf(SortColumn.ID) }
-//    var sortOrder by remember { mutableStateOf(SortOrder.ASC) }
-//
-//    Column(modifier = Modifier.fillMaxSize()) {
-//        // شريط البحث
-//        TextField(
-//            value = searchQuery,
-//            onValueChange = { searchQuery = it },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//            placeholder = { Text("Search by ID, User ID, Title, or Body") }
-//        )
-//
-//        // معالجة المنشورات
-//        val filteredPosts = remember(posts, searchQuery) {
-//            if (searchQuery.isEmpty()) posts else posts.filter {
-//                it.id.toString().contains(searchQuery, true) ||
-//                        it.userId.toString().contains(searchQuery, true) ||
-//                        it.title.contains(searchQuery, true) ||
-//                        it.body.contains(searchQuery, true)
-//            }
-//        }
-//        val sortedPosts = remember(filteredPosts, sortColumn, sortOrder) {
-//            val comparator = when (sortColumn) {
-//                SortColumn.ID -> compareBy<Post> { it.id }
-//                SortColumn.USER_ID -> compareBy<Post> { it.userId }
-//                SortColumn.TITLE -> compareBy<Post> { it.title }
-//                SortColumn.BODY -> compareBy<Post> { it.body }
-//            }
-//
-//            if (sortOrder == SortOrder.DESC) {
-//                filteredPosts.sortedWith(comparator.reversed())
-//            } else {
-//                filteredPosts.sortedWith(comparator)
-//            }
-//        }
-//
-//        // رأس الجدول
-//        TableHeader(
-//            sortColumn = sortColumn,
-//            sortOrder = sortOrder,
-//            onSortChange = { column ->
-//                if (sortColumn == column) {
-//                    sortOrder = if (sortOrder == SortOrder.ASC) SortOrder.DESC else SortOrder.ASC
-//                } else {
-//                    sortColumn = column
-//                    sortOrder = SortOrder.ASC
-//                }
-//            }
-//        )
-//
-//        // صفوف الجدول
-//        LazyColumn {
-//            items(sortedPosts) { post ->
-//                EditableTableRow(
-//                    post = post,
-//                    onPostUpdated = onPostUpdated,
-//                    onPostDeleted = onPostDeleted
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun EditableTableRow(
-//    post: Post,
-//    onPostUpdated: (Post) -> Unit,
-//    onPostDeleted: (Long) -> Unit
-//) {
-//    var isEditing by remember { mutableStateOf(false) }
-//    var editableUserId by remember { mutableStateOf(post.userId.toString()) }
-//    var editableTitle by remember { mutableStateOf(post.title) }
-//    var editableBody by remember { mutableStateOf(post.body) }
-//
-//    Surface(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 2.dp),
-//        color = MaterialTheme.colorScheme.surface
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .clickable { isEditing = !isEditing }
-//                .padding(8.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            // ID (غير قابل للتعديل)
-//            Text(
-//                text = post.id.toString(),
-//                modifier = Modifier.weight(0.5f),
-//                maxLines = 1,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//
-//            // User ID
-//            if (isEditing) {
-//                TextField(
-//                    value = editableUserId,
-//                    onValueChange = { editableUserId = it },
-//                    modifier = Modifier.weight(0.5f),
-//                    colors = TextFieldDefaults.colors(
-//                        focusedContainerColor = Color.Transparent,
-//                        unfocusedContainerColor = Color.Transparent
-//                    )
-//                )
-//            } else {
-//                Text(
-//                    text = post.userId.toString(),
-//                    modifier = Modifier.weight(0.5f),
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//            }
-//
-//            // Title
-//            if (isEditing) {
-//                TextField(
-//                    value = editableTitle,
-//                    onValueChange = { editableTitle = it },
-//                    modifier = Modifier.weight(2f),
-//                    colors = TextFieldDefaults.colors(
-//                        focusedContainerColor = Color.Transparent,
-//                        unfocusedContainerColor = Color.Transparent
-//                    )
-//                )
-//            } else {
-//                Text(
-//                    text = post.title,
-//                    modifier = Modifier.weight(2f),
-//                    maxLines = 2,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//            }
-//
-//            // Body
-//            if (isEditing) {
-//                TextField(
-//                    value = editableBody,
-//                    onValueChange = { editableBody = it },
-//                    modifier = Modifier.weight(2.5f),
-//                    colors = TextFieldDefaults.colors(
-//                        focusedContainerColor = Color.Transparent,
-//                        unfocusedContainerColor = Color.Transparent
-//                    )
-//                )
-//                IconButton(
-//                    onClick = {
-//                        val updatedPost = post.copy(
-//                            userId = editableUserId.toIntOrNull() ?: post.userId,
-//                            title = editableTitle,
-//                            body = editableBody
-//                        )
-//                        onPostUpdated(updatedPost)
-//                        isEditing = false
-//                    },
-//                    modifier = Modifier.weight(0.5f)
-//                ) {
-//                    Icon(Icons.Default.Check, contentDescription = "Save")
-//                }
-//            } else {
-//                Text(
-//                    text = post.body,
-//                    modifier = Modifier.weight(3f),
-//                    maxLines = 2,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//                IconButton(
-//                    onClick = { onPostDeleted(post.id) },
-//                    modifier = Modifier.weight(0.5f)
-//                ) {
-//                    Icon(Icons.Default.Delete, contentDescription = "Delete")
-//                }
-//            }
-//        }
-//    }
-//}
 
-//@Composable
-//fun PostsScreen(
-//    viewModel: PostViewModel = hiltViewModel() // تغيير هنا
-//) {
-////@Composable
-////fun PostsScreen(viewModel: PostViewModel = viewModel()) {
-//    val posts by viewModel.posts.collectAsState()
-//    val isLoading by viewModel.isLoading.collectAsState()
-//    val error by viewModel.error.collectAsState()
-//
-//    Scaffold(
-//    ) { paddingValues ->
-//        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-//            when {
-//                isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-//                error != null -> Text(text = "Error: $error", modifier = Modifier.align(Alignment.Center))
-//                posts.isEmpty() -> Text("No posts available", modifier = Modifier.align(Alignment.Center))
-//                else -> PostList(posts)
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun PostList(posts: List<Post>) {
-//    LazyColumn {
-//        items(posts) { post ->
-//            Card(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp),
-//
-//                ) {
-//                Column(modifier = Modifier.padding(16.dp)) {
-//                    Text(text = post.title, style = MaterialTheme.typography.titleLarge)
-//                    Spacer(modifier = Modifier.height(4.dp))
-//                    Text(text = post.body)
-//                }
-//            }
-//        }
-//    }
-//}
 
-/////*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostsScreen(viewModel: PostViewModel = viewModel()) {
     val posts by viewModel.posts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
     val operationStatus by viewModel.operationStatus.collectAsState()
-    val scope = rememberCoroutineScope()
+
+    var showAddDialog by remember { mutableStateOf(false) } // التحكم في عرض النافذة
+
+    // إظهار Snackbar عند نجاح أو فشل العملية
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // معالجة عرض رسائل النجاح والخطأ
-    LaunchedEffect(error, operationStatus) {
-        error?.let {
-            snackbarHostState.showSnackbar(
-                message = it,
-                duration = SnackbarDuration.Short,
-                withDismissAction = true
-            )
-            viewModel.clearError()
+    LaunchedEffect(operationStatus) {
+        if (operationStatus == true) {
+            snackbarHostState.showSnackbar("Post added successfully!")
+            viewModel.clearOperationStatus()
+        } else if (operationStatus == false) {
+            snackbarHostState.showSnackbar("Failed to add post")
+            viewModel.clearOperationStatus()
         }
-        operationStatus?.let {
-            if (it) {
-                snackbarHostState.showSnackbar(
-                    message = "Operation completed successfully",
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true
-                )
-                viewModel.clearOperationStatus()
-            }
-        }
-    }
-
-    // جلب البيانات عند بدء الشاشة
-    LaunchedEffect(Unit) {
-        viewModel.fetchPosts()
     }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text("Posts Management") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showAddDialog = true }) {
+                Icon(Icons.Default.Add, contentDescription = "Add Post")
+            }
         }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
             when {
-                isLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                isLoading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
+                error != null -> Text(
+                    "Error: ${error ?: "Unknown"}",
+                    Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp)
+                )
+                posts.isEmpty() -> Text("No posts available", modifier = Modifier.align(Alignment.Center))
+                else -> PostTable(
+                    posts = posts,
+                    onPostUpdated = { updatedPost -> viewModel.updatePost(updatedPost) },
+                    onPostDeleted = { postId -> viewModel.deletePost(postId) }
+                )
+            }
+
+            // عرض نافذة إضافة منشور
+            if (showAddDialog) {
+                AddPostDialog(
+                    onDismiss = { showAddDialog = false },
+                    onConfirm = { newPost ->
+                        viewModel.addPost(newPost)
+                        showAddDialog = false
                     }
-                }
-                error != null -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Build,
-                            contentDescription = "Error",
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = error ?: "Unknown error",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(
-                            onClick = { viewModel.fetchPosts() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            Text("Retry")
-                        }
-                    }
-                }
-                posts.isEmpty() -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "No Posts",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "No posts available",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-                else -> {
-                    PostTable(
-                        posts = posts,
-                        onPostUpdated = { updatedPost ->
-                            viewModel.updatePost(updatedPost)
-                        }
-                    )
-                }
+                )
             }
         }
     }
 }
+@Composable
+fun AddPostDialog(
+    onDismiss: () -> Unit, // إغلاق النافذة
+    onConfirm: (Post) -> Unit // تأكيد الإضافة
+) {
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
+    var titleError by remember { mutableStateOf(false) }
+    var bodyError by remember { mutableStateOf(false) }
 
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add New Post") },
+        text = {
+            Column {
+                // حقل إدخال العنوان
+                TextField(
+                    value = title,
+                    onValueChange = {
+                        title = it
+                        titleError = it.isBlank()
+                    },
+                    label = { Text("Title") },
+                    isError = titleError,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (titleError) {
+                    Text(
+                        text = "Title is required",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
 
-//@Composable
-//fun PostsScreen(viewModel: PostViewModel = viewModel()) {
-//    val posts by viewModel.posts.collectAsState()
-//    val isLoading by viewModel.isLoading.collectAsState()
-//    val error by viewModel.error.collectAsState()
-//
-//    LaunchedEffect(Unit) {
-//        viewModel.fetchPosts()
-//    }
-//
-//    Scaffold { paddingValues ->
-//        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-//            when {
-//                isLoading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-//                error != null -> Text(
-//                    "Error: ${error ?: "Unknown"}",
-//                    Modifier.align(Alignment.Center).padding(16.dp)
-//                )
-//                posts.isEmpty() -> Text("No posts available", modifier = Modifier.align(Alignment.Center))
-//                else -> PostTable(
-//                    posts = posts,
-//                    onPostUpdated = { updatedPost -> viewModel.updatePost(updatedPost) }
-//                )
-//            }
-//        }
-//    }
-//}
-//
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // حقل إدخال المحتوى
+                TextField(
+                    value = body,
+                    onValueChange = {
+                        body = it
+                        bodyError = it.isBlank()
+                    },
+                    label = { Text("Body") },
+                    isError = bodyError,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (bodyError) {
+                    Text(
+                        text = "Body is required",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    titleError = title.isBlank()
+                    bodyError = body.isBlank()
+                    if (!titleError && !bodyError) {
+                        val newPost = Post(
+                            id = System.currentTimeMillis(), // استخدام الوقت كمثال لـ ID
+                            userId = 1, // يمكن تغيير هذا ليكون ديناميكيًا
+                            title = title,
+                            body = body
+                        )
+                        onConfirm(newPost)
+                        onDismiss()
+                    }
+                }
+            ) {
+                Text("Add")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
 @Composable
 fun PostTable(
     posts: List<Post>,
-    onPostUpdated: (Post) -> Unit
+    onPostUpdated: (Post) -> Unit,
+    onPostDeleted: (Long) -> Unit // دالة الحذف
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var sortColumn by remember { mutableStateOf(SortColumn.ID) }
@@ -536,7 +256,8 @@ fun PostTable(
             items(sortedPosts) { post ->
                 EditableTableRow(
                     post = post,
-                    onPostUpdated = onPostUpdated
+                    onPostUpdated = onPostUpdated,
+                    onPostDeleted = onPostDeleted // تمرير دالة الحذف
                 )
             }
         }
@@ -598,7 +319,8 @@ private fun HeaderCell(
 @Composable
 fun EditableTableRow(
     post: Post,
-    onPostUpdated: (Post) -> Unit
+    onPostUpdated: (Post) -> Unit,
+    onPostDeleted: (Long) -> Unit // دالة الحذف
 ) {
     var isEditing by remember { mutableStateOf(false) }
     var editableUserId by remember { mutableStateOf(post.userId.toString()) }
@@ -690,6 +412,15 @@ fun EditableTableRow(
                     modifier = Modifier.weight(0.5f)
                 ) {
                     Icon(Icons.Default.Check, contentDescription = "Save")
+                }
+                IconButton(
+                    onClick = {
+                        onPostDeleted(post.id) // استدعاء دالة الحذف
+                        isEditing = false
+                    },
+                    modifier = Modifier.weight(0.5f)
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
                 }
             } else {
                 Text(
